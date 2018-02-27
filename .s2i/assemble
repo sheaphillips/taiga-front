@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+curl -sSL https://get.rvm.io | bash -s stable --ruby
+source ~/.profile
+gem install sass scss-lint
+export PATH="~/.gem/ruby/2.1.0/bin:$PATH"
+
+npm install -g gulp
+npm install
+gulp deploy
+
+
