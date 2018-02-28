@@ -7,7 +7,9 @@ CURRENT_DIR=$(pwd)
 
 echo "Current dir is ${CURRENT_DIR}"
 
-ls -la
+echo "Finding the source..."
+
+find /Users -name \* -print
 
 echo "Installing rvm/ruby..."
 gpg2 --keyserver hkp://pgp.mit.edu:80 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
@@ -25,8 +27,7 @@ CURRENT_DIR=$(pwd)
 echo "Moving the source..."
 
 # move the application source
-mv /tmp/s2i/src $HOME/src
-
+mv /tmp/ $HOME/src
 
 echo "Current dir is ${CURRENT_DIR}"
 
