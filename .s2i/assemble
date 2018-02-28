@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "Starting custom nodejs assemble..."
+
 curl -sSL https://get.rvm.io | bash -s stable --ruby
 source ~/.profile
 gem install sass scss-lint
@@ -9,4 +11,5 @@ npm install -g gulp
 npm install
 gulp deploy
 
+echo "Assemble complete..."
 
