@@ -12,6 +12,13 @@ export PATH="~/.gem/ruby/2.1.0/bin:$PATH"
 echo "Installing gulp..."
 npm install -g gulp
 
+echo "Where are we?"
+CURRENT_DIR=$(pwd)
+
+echo "Current dir is ${CURRENT_DIR}"
+
+ls -la
+
 echo "Running npm install..."
 npm install
 
