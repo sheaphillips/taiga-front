@@ -30,6 +30,7 @@ echo "Moving the source..."
 mv /tmp/src $HOME
 
 echo "Current dir is ${CURRENT_DIR}"
+echo "Home dir is ${HOME_DIR}"
 
 ls -la
 
