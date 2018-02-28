@@ -2,7 +2,7 @@
 
 echo "Starting custom nodejs assemble..."
 
-gpg2 --keyserver hkp://pgp.mit.edu --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+gpg2 --keyserver hkp://pgp.mit.edu:80 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 curl -sSL https://get.rvm.io | bash -s stable --ruby
 source ~/.profile
 gem install sass scss-lint
