@@ -1,0 +1,66 @@
+{
+  "apiVersion": "v1",
+  "kind": "BuildConfig",
+  "metadata": {
+    "creationTimestamp": null,
+    "labels": {
+      "app": "taiga-front"
+    },
+    "name": "taiga-front-runtime"
+  },
+  "spec": {
+    "completionDeadlineSeconds": 1800,
+    "nodeSelector": null,
+    "output": {
+      "to": {
+        "kind": "ImageStreamTag",
+        "name": "taiga-front-runtime:latest"
+      }
+    },
+    "postCommit": {},
+    "resources": {
+      "limits": {
+        "cpu": "500m",
+        "memory": "4Gi"
+      }
+    },
+    "runPolicy": "Serial",
+    "source": {
+        "dockerfile": "FROM taiga-front:latest\nCOPY * /var/www/html/\nCMD  /tmp/scripts/run",
+      "images": [
+        {
+          "from": {
+            "kind": "ImageStreamTag",
+            "name": "taiga-front:latest"
+          },
+          "paths": [
+            {
+              "destinationDir": "tmp",
+              "sourcePath": "/opt/app-root/src/dist/."
+            }
+          ]
+        }
+      ],
+      "type": "Dockerfile"
+    },
+    "strategy": {
+      "dockerStrategy": {
+        "from": {
+          "kind": "ImageStreamTag",
+          "name": "bcgov-s2i-caddy:latest",
+          "namespace": "openshift"
+        }
+      },
+      "type": "Docker"
+    },
+    "triggers": [
+      {
+        "imageChange": {},
+        "type": "ImageChange"
+      }
+    ]
+  },
+  "status": {
+    "lastVersion": 0
+  }
+}
