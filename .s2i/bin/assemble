@@ -37,5 +37,8 @@ npm install
 echo "Running gulp deploy..."
 gulp deploy
 
+echo "Adding github plugin..."
+mkdir -p plugins/github-auth && curl -L https://github.com/taigaio/taiga-contrib-github-auth/tarball/3.1 | tar xz -C plugins/github-auth --strip-components=3 */front/dist
+
 echo "Assemble complete..."
 

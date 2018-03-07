@@ -31,6 +31,18 @@
         {
           "from": {
             "kind": "ImageStreamTag",
+            "name": "taiga-django-psql-persistent:latest"
+          },
+          "paths": [
+            {
+              "destinationDir": "tmp/static",
+              "sourcePath": "/opt/app-root/src/static/."
+            }
+          ]
+        },
+        {
+          "from": {
+            "kind": "ImageStreamTag",
             "name": "taiga-front:latest"
           },
           "paths": [
