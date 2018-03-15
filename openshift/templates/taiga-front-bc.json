@@ -51,7 +51,7 @@
               "namespace": "openshift",
               "name": "nodejs:6"
             },
-            "scripts": "${GIT_RUNTIME_URL}/${GIT_RUNTIME_REF}/${GIT_RUNTIME_NODEJS_CONTEXT_DIR}/.s2i/bin/"
+            "scripts": "${GIT_SCRIPTS_BASE_URL}"
           }
         },
         "output": {
@@ -181,6 +181,11 @@
       "name": "GIT_UPSTREAM_REF",
       "required": true,
       "value": "3.2.1"
+    },
+    {
+      "name": "GIT_SCRIPTS_BASE_URL",
+      "required": true,
+      "value": "https://github.com/sheaphillips/taiga-front/tree/v3.1.1/nodejs/.s2i/bin"
     },
     {
       "name": "GIT_RUNTIME_URL",
