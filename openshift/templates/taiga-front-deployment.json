@@ -1,0 +1,196 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "true",
+    "creationTimestamp": null
+  },
+  "objects": [
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "taiga-front",
+        "labels": {
+          "app": "taiga-front"
+        }
+      },
+      "spec": {
+        "strategy": {
+          "type": "Rolling",
+          "rollingParams": {
+            "updatePeriodSeconds": 1,
+            "intervalSeconds": 1,
+            "timeoutSeconds": 600,
+            "maxUnavailable": "25%",
+            "maxSurge": "25%"
+          },
+          "resources": {},
+          "activeDeadlineSeconds": 21600
+        },
+        "triggers": [
+          {
+            "type": "ImageChange",
+            "imageChangeParams": {
+              "automatic": true,
+              "containerNames": [
+                "taiga-front"
+              ],
+              "from": {
+                "kind": "ImageStreamTag",
+                "namespace": "devops-sandbox-tools",
+                "name": "taiga-front-runtime:latest"
+              }
+            }
+          },
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "test": false,
+        "selector": {
+          "deploymentconfig": "taiga-front"
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "taiga-front",
+              "deploymentconfig": "taiga-front"
+            }
+          },
+          "spec": {
+            "volumes": [
+              {
+                "name": "taiga-conf-0t33z",
+                "configMap": {
+                  "name": "taiga-conf",
+                  "items": [
+                    {
+                      "key": "conf.json",
+                      "path": "conf.json"
+                    }
+                  ],
+                  "defaultMode": 420
+                }
+              },
+              {
+                "name": "taiga-front-caddyfile-c53rw",
+                "configMap": {
+                  "name": "taiga-front-caddyfile",
+                  "items": [
+                    {
+                      "key": "Caddyfile",
+                      "path": "Caddyfile"
+                    }
+                  ],
+                  "defaultMode": 420
+                }
+              },
+              {
+                "name": "volume-nbqdw",
+                "persistentVolumeClaim": {
+                  "claimName": "taiga-back-storage"
+                }
+              }
+            ],
+            "containers": [
+              {
+                "name": "taiga-front",
+                "image": "172.50.0.2:5000/devops-sandbox-tools/taiga-front-runtime@sha256:4246286cc59960cdd5812a1ab6d3c68ec8613d7874a8ad8530fce6351cb53a92",
+                "ports": [
+                  {
+                    "containerPort": 2015,
+                    "protocol": "TCP"
+                  }
+                ],
+                "resources": {},
+                "volumeMounts": [
+                  {
+                    "name": "taiga-conf-0t33z",
+                    "readOnly": true,
+                    "mountPath": "/var/www/html/conf.json",
+                    "subPath": "conf.json"
+                  },
+                  {
+                    "name": "taiga-front-caddyfile-c53rw",
+                    "readOnly": true,
+                    "mountPath": "/etc/Caddyfile",
+                    "subPath": "Caddyfile"
+                  },
+                  {
+                    "name": "volume-nbqdw",
+                    "readOnly": true,
+                    "mountPath": "/var/www/html/media",
+                    "subPath": "media"
+                  }
+                ],
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "imagePullPolicy": "Always"
+              }
+            ],
+            "restartPolicy": "Always",
+            "terminationGracePeriodSeconds": 30,
+            "dnsPolicy": "ClusterFirst",
+            "securityContext": {},
+            "schedulerName": "default-scheduler"
+          }
+        }
+      }
+    },
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "taiga-front",
+        "creationTimestamp": null,
+        "labels": {
+          "app": "taiga-front"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "2015-tcp",
+            "protocol": "TCP",
+            "port": 2015,
+            "targetPort": 2015
+          }
+        ],
+        "selector": {
+          "deploymentconfig": "taiga-front"
+        },
+        "type": "ClusterIP",
+        "sessionAffinity": "None"
+      }
+    },
+    {
+      "kind": "Route",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "taiga-front",
+        "creationTimestamp": null,
+        "labels": {
+          "app": "taiga-front"
+        }
+      },
+      "spec": {
+        "host": "taiga-front-sandbox.pathfinder.gov.bc.ca",
+        "to": {
+          "kind": "Service",
+          "name": "taiga-front",
+          "weight": 100
+        },
+        "port": {
+          "targetPort": "2015-tcp"
+        },
+        "tls": {
+          "termination": "edge",
+          "insecureEdgeTerminationPolicy": "Redirect"
+        },
+        "wildcardPolicy": "None"
+      }
+    }
+  ]
+}
