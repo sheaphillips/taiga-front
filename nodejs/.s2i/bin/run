@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-/usr/libexec/s2i/run
+echo "Placeholder for saving artifacts..."
