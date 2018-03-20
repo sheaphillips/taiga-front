@@ -185,7 +185,7 @@
     {
       "name": "GIT_SCRIPTS_BASE_URL",
       "required": true,
-      "value": "https://github.com/sheaphillips/taiga-front/tree/v3.1.1/nodejs/.s2i/bin"
+      "value": "https://raw.githubusercontent.com/sheaphillips/taiga-front/v3.1.1/nodejs/.s2i/bin"
     },
     {
       "name": "GIT_RUNTIME_URL",
