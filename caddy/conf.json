@@ -1,5 +1,5 @@
 {
-  "api": "https://taiga-sandbox.pathfinder.gov.bc.ca/api/v1/",
+  "api": "{{.Env.TAIGA_API_URL}}",
   "eventsUrl": null,
   "eventsMaxMissedHeartbeats": 5,
   "eventsHeartbeatIntervalTime": 60000,
@@ -15,7 +15,7 @@
   "privacyPolicyUrl": null,
   "termsOfServiceUrl": null,
   "maxUploadFileSize": null,
-  "gitHubClientId": "8ced7765b65b0d4f22cc",
+  "gitHubClientId": "{{.Env.GITHUB_CLIENT_ID}}",
   "contribPlugins": [
     "/plugins/github-auth/github-auth.json"
   ],

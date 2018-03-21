@@ -90,10 +90,10 @@
         "runPolicy": "Serial",
         "source": {
           "type": "Git",
+          "contextDir": "${GIT_RUNTIME_CADDY_CONTEXT_DIR}",
           "git": {
             "uri": "${GIT_RUNTIME_URL}",
-            "ref": "${GIT_RUNTIME_REF}",
-            "contextDir": "${GIT_RUNTIME_CADDY_CONTEXT_DIR}"
+            "ref": "${GIT_RUNTIME_REF}"
           },
           "images": [
             {
@@ -124,7 +124,7 @@
         },
         "strategy": {
           "type": "Source",
-          "dockerStrategy": {
+          "sourceStrategy": {
             "from": {
               "kind": "ImageStreamTag",
               "namespace": "openshift",
@@ -195,7 +195,7 @@
     {
       "name": "GIT_RUNTIME_REF",
       "required": true,
-      "value": "v3.1.1"
+      "value": "refs/heads/v3.1.1"
     },
     {
       "name": "GIT_RUNTIME_NODEJS_CONTEXT_DIR",

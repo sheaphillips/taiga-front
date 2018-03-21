@@ -2,17 +2,16 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "true",
-    "creationTimestamp": null
+    "name": "taiga-front-deployment-template"
   },
   "objects": [
     {
       "kind": "DeploymentConfig",
       "apiVersion": "v1",
       "metadata": {
-        "name": "taiga-front",
+        "name": "${NAME}",
         "labels": {
-          "app": "taiga-front"
+          "app": "${NAME}"
         }
       },
       "spec": {
@@ -34,12 +33,12 @@
             "imageChangeParams": {
               "automatic": true,
               "containerNames": [
-                "taiga-front"
+                "${NAME}"
               ],
               "from": {
                 "kind": "ImageStreamTag",
-                "namespace": "devops-sandbox-tools",
-                "name": "taiga-front-runtime:latest"
+                "namespace": "${IMAGESTREAM_NAMESPACE}",
+                "name": "${IMAGESTREAM_NAME}:${IMAGESTREAM_TAG}"
               }
             }
           },
@@ -50,76 +49,48 @@
         "replicas": 1,
         "test": false,
         "selector": {
-          "deploymentconfig": "taiga-front"
+          "deploymentconfig": "${NAME}"
         },
         "template": {
           "metadata": {
             "labels": {
-              "app": "taiga-front",
-              "deploymentconfig": "taiga-front"
+              "app": "${NAME}",
+              "deploymentconfig": "${NAME}"
             }
           },
           "spec": {
             "volumes": [
               {
-                "name": "taiga-conf-0t33z",
-                "configMap": {
-                  "name": "taiga-conf",
-                  "items": [
-                    {
-                      "key": "conf.json",
-                      "path": "conf.json"
-                    }
-                  ],
-                  "defaultMode": 420
-                }
-              },
-              {
-                "name": "taiga-front-caddyfile-c53rw",
-                "configMap": {
-                  "name": "taiga-front-caddyfile",
-                  "items": [
-                    {
-                      "key": "Caddyfile",
-                      "path": "Caddyfile"
-                    }
-                  ],
-                  "defaultMode": 420
-                }
-              },
-              {
-                "name": "volume-nbqdw",
+                "name": "taiga-media-volume",
                 "persistentVolumeClaim": {
-                  "claimName": "taiga-back-storage"
+                  "claimName": "taiga-back"
                 }
               }
             ],
             "containers": [
               {
-                "name": "taiga-front",
-                "image": "172.50.0.2:5000/devops-sandbox-tools/taiga-front-runtime@sha256:4246286cc59960cdd5812a1ab6d3c68ec8613d7874a8ad8530fce6351cb53a92",
+                "name": "${NAME}",
+                "image": " ",
                 "ports": [
                   {
                     "containerPort": 2015,
                     "protocol": "TCP"
                   }
                 ],
+                "env": [
+                  {
+                    "name": "GITHUB_CLIENT_ID",
+                    "value": "${GITHUB_CLIENT_ID}"
+                  },
+                  {
+                    "name": "TAIGA_API_URL",
+                    "value": "${TAIGA_API_URL}"
+                  }
+                ],
                 "resources": {},
                 "volumeMounts": [
                   {
-                    "name": "taiga-conf-0t33z",
-                    "readOnly": true,
-                    "mountPath": "/var/www/html/conf.json",
-                    "subPath": "conf.json"
-                  },
-                  {
-                    "name": "taiga-front-caddyfile-c53rw",
-                    "readOnly": true,
-                    "mountPath": "/etc/Caddyfile",
-                    "subPath": "Caddyfile"
-                  },
-                  {
-                    "name": "volume-nbqdw",
+                    "name": "taiga-media-volume",
                     "readOnly": true,
                     "mountPath": "/var/www/html/media",
                     "subPath": "media"
@@ -143,10 +114,10 @@
       "kind": "Service",
       "apiVersion": "v1",
       "metadata": {
-        "name": "taiga-front",
+        "name": "${NAME}",
         "creationTimestamp": null,
         "labels": {
-          "app": "taiga-front"
+          "app": "${NAME}"
         }
       },
       "spec": {
@@ -159,7 +130,7 @@
           }
         ],
         "selector": {
-          "deploymentconfig": "taiga-front"
+          "deploymentconfig": "${NAME}"
         },
         "type": "ClusterIP",
         "sessionAffinity": "None"
@@ -169,17 +140,16 @@
       "kind": "Route",
       "apiVersion": "v1",
       "metadata": {
-        "name": "taiga-front",
-        "creationTimestamp": null,
+        "name": "${NAME}",
         "labels": {
-          "app": "taiga-front"
+          "app": "${NAME}"
         }
       },
       "spec": {
-        "host": "taiga-front-sandbox.pathfinder.gov.bc.ca",
+        "host": "${ROUTE_URL}",
         "to": {
           "kind": "Service",
-          "name": "taiga-front",
+          "name": "${NAME}",
           "weight": 100
         },
         "port": {
@@ -191,6 +161,35 @@
         },
         "wildcardPolicy": "None"
       }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "NAME",
+      "value": "taiga-front"
+    },
+    {
+      "name": "IMAGESTREAM_NAME",
+      "value": "taiga-front-runtime"
+    },
+    {
+      "name": "IMAGESTREAM_NAMESPACE",
+      "value": "devops-platform-support-tools"
+    },
+    {
+      "name": "IMAGESTREAM_TAG",
+      "value": "latest"
+    },
+    {
+      "name": "ROUTE_URL",
+      "required": true
+    },
+    {
+      "name": "TAIGA_API_URL",
+      "required": true
+    },
+    {
+      "name": "GITHUB_CLIENT_ID"
     }
   ]
 }
